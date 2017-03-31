@@ -1,0 +1,20 @@
+{
+  "name": "LDOCE-Pronunciation-Audio-Downloader",
+  "version": "1.0.0",
+  "description": "A Node.js tool to download both British and American pronunciation of vocabularies from Longman Dictionary of Contemporary English (http://www.ldoceonline.com)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmosawy/LDOCE-Pronunciation-Audio-Downloader.git"
+  },
+  "keywords": [
+    "ldoce",
+    "longman",
+    "pronunciation downloader"
+  ],
+  "author": "Jeff Mosawy <jmosawy@gmail.com> (http://www.jmosawy.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jmosawy/LDOCE-Pronunciation-Audio-Downloader/issues"
+  },
+  "homepage": "https://github.com/jmosawy/LDOCE-Pronunciation-Audio-Downloader#readme"
+}
