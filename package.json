@@ -12,7 +12,8 @@
     "request": "^2.81.0"
   },
   "scripts": {
-    "api": "nodemon api.js"
+    "api": "nodemon api.js",
+    "start": "node api.js"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"
