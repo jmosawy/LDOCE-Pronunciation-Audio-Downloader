@@ -1,7 +1,6 @@
 const express = require('express')
 const {getPronounciation} = require('./index')
 const port = process.env.PORT || 8080
-const hostname = 'localhost'
 
 const app = express()
 
@@ -34,6 +33,6 @@ app.get('/pronounce', (req, res) => {
     })
 })
 
-app.listen(port, hostname, () => {
+app.listen(port, () => {
   console.log(`API Server running on ${hostname}:${port}`)
 })
