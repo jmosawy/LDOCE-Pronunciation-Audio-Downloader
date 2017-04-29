@@ -1,50 +1,36 @@
-const request = require('request');
-const fs = require('fs');
-const path = require('path');
-const cheerio = require('cheerio');
+const axios = require('axios')
+const fs = require('fs')
+const cheerio = require('cheerio')
 
-const downloadPath = path.resolve(__dirname, 'downloads/');
 const ameClass = '.speaker.amefile',
   breClass = '.speaker.brefile'
 
 
-function normalizer(word) {
-  return word.trim().replace(/\s+/g, '-').toLowerCase();
+function normalizeWord(word) {
+  return word.trim().replace(/\s+/g, '-').toLowerCase()
 }
-function fileDownloader(link, fileName) {
-  if (!fs.existsSync(downloadPath)) {
-    fs.mkdir(downloadPath);
-  }
 
-  let req = request
-    .get(link)
-    .on('error', err => {
-      return err;
+function getURL(word) {
+  return `http://www.ldoceonline.com/dictionary/${word}`
+}
+
+function getPronounciation(word) {
+
+  return axios.get(getURL(word))
+    .then(res => {
+      const $ = cheerio.load(res.data)
+      const ameFile = $(ameClass).data('src-mp3'),
+      breFile = $(breClass).data('src-mp3')
+
+      return {
+        american: ameFile,
+        british: breFile
+      }
     })
-    .on('response', res => {
-      if (res.statusCode == 200)
-        req.pipe(fs.createWriteStream(path.resolve(downloadPath, `${fileName}.mp3`)));
-    })
+    .catch(console.warn)
+
 }
 
-function main(link, word) {
-
-  request(link, (error, response, body) => {
-    if (error) return error;
-
-    const $ = cheerio.load(body);
-    const ameFile = $(ameClass).data('src-mp3'),
-      breFile = $(breClass).data('src-mp3');
-
-
-    // Downloading American Pronunciation
-    fileDownloader(ameFile, `ame-${word}`);
-
-    // Downloading British Pronunciation
-    fileDownloader(breFile, `bre-${word}`);
-
-  })
+module.exports = {
+  getPronounciation
 }
-
-let word = normalizer(process.argv[2]);
-main(`http://www.ldoceonline.com/dictionary/${word}`, word);
