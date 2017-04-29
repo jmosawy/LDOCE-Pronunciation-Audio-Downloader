@@ -16,12 +16,11 @@ app.use((req, res, next) => {
 app.get('/pronounce', (req, res) => {
   const {word} = req.query
 
-  return getPronounciation(word)
+  return getPronounciation(word.toLowerCase())
     .then(response => {
       return res.status(200).json(response)
     })
     .catch(e => {
-      console.log(e)
       return res.status(400).json({
         error: true,
         message: 'Something went wrong'
