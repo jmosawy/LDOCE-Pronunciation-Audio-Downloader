@@ -51,7 +51,7 @@
 
       setButtonLoading(true)
 
-      fetch('http://localhost:4000/pronounce?word=' + $input.value)
+      fetch('https://longman-api.herokuapp.com//pronounce?word=' + $input.value)
         .then(function (res) {
           return res.json()
         })

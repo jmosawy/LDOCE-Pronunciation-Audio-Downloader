@@ -1,6 +1,6 @@
 const express = require('express')
 const {getPronounciation} = require('./index')
-const port = 4000
+const port = process.env.PORT || 8080
 const hostname = 'localhost'
 
 const app = express()
