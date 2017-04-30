@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
   res.render('pages/index', {
     apiServer: envTask(
       () => 'http://localhost:' + app.get('port') + '/pronounce',
-      () => 'https://intense-ridge-91986.herokuapp.com:' + app.get('port') + '/pronounce'
+      () => 'https://longman-api.herokuapp.com:' + app.get('port') + '/pronounce'
     )
   })
 })
