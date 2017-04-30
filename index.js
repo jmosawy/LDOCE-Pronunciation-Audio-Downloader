@@ -14,12 +14,12 @@ app.set('port', port)
 app.set('views', __dirname + '/views')
 app.set('view engine', 'ejs')
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Methods', '*')
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*')
+//   res.header('Access-Control-Allow-Methods', '*')
 
-  next()
-})
+//   next()
+// })
 
 app.use(express.static(__dirname + '/public'))
 
