@@ -1,50 +1,52 @@
-const request = require('request');
-const fs = require('fs');
-const path = require('path');
-const cheerio = require('cheerio');
+const express = require('express')
+const { getPronounciation } = require('./word')
+const port = process.env.PORT || 5000
 
-const downloadPath = path.resolve(__dirname, 'downloads/');
-const ameClass = '.speaker.amefile',
-  breClass = '.speaker.brefile'
-
-
-function normalizer(word) {
-  return word.trim().replace(/\s+/g, '-').toLowerCase();
-}
-function fileDownloader(link, fileName) {
-  if (!fs.existsSync(downloadPath)) {
-    fs.mkdir(downloadPath);
-  }
-
-  let req = request
-    .get(link)
-    .on('error', err => {
-      return err;
-    })
-    .on('response', res => {
-      if (res.statusCode == 200)
-        req.pipe(fs.createWriteStream(path.resolve(downloadPath, `${fileName}.mp3`)));
-    })
+const envTask = (dev = () => { }, prod = () => { }) => {
+  const env = process.env.NODE_ENV
+  return (env === 'development' ? dev() : prod())
 }
 
-function main(link, word) {
+const app = express()
 
-  request(link, (error, response, body) => {
-    if (error) return error;
+app.set('port', port)
 
-    const $ = cheerio.load(body);
-    const ameFile = $(ameClass).data('src-mp3'),
-      breFile = $(breClass).data('src-mp3');
+app.set('views', __dirname + '/views')
+app.set('view engine', 'ejs')
 
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*')
+//   res.header('Access-Control-Allow-Methods', '*')
 
-    // Downloading American Pronunciation
-    fileDownloader(ameFile, `ame-${word}`);
+//   next()
+// })
 
-    // Downloading British Pronunciation
-    fileDownloader(breFile, `bre-${word}`);
+app.use(express.static(__dirname + '/public'))
 
+app.get('/', (req, res) => {
+  res.render('pages/index', {
+    apiServer: envTask(
+      () => 'http://localhost:' + app.get('port') + '/pronounce',
+      () => 'https://longman-api.herokuapp.com:' + app.get('port') + '/pronounce'
+    )
   })
-}
+})
 
-let word = normalizer(process.argv[2]);
-main(`http://www.ldoceonline.com/dictionary/${word}`, word);
+app.get('/pronounce', (req, res) => {
+  const { word } = req.query
+
+  return getPronounciation(word.toLowerCase())
+    .then(response => {
+      return res.status(200).json(response)
+    })
+    .catch(e => {
+      return res.status(400).json({
+        error: true,
+        message: 'Something went wrong'
+      })
+    })
+})
+
+app.listen(app.get('port'), () => {
+  console.log(`API Server running on port ${app.get('port')}`)
+})

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html class="no-js">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>LDOCE-Pronunciation-Audio-Downloader</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/responsive.css">
+  <link rel="icon" href="/favicon.png">
+</head>
+
+<body>
+  <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+  <div class="container">
+    <h3 class="text-center title">Type in any word to pronounce it</h3>
+    <div class="block">
+      <div class="form">
+        <button id="submit" onclick="submitWord()" class="form__button">Get Pronounciation</button>
+        <input id="word" type="text" class="form__input" placeholder="word...">
+      </div>
+      <div class="result" id="result"></div>
+    </div>
+  </div>
+
+  <script>
+    var lastFetchedWord = null
+
+    function audioFactory(title, src) {
+      return '<label>' + title + '(' + lastFetchedWord + '):</label><audio controls src="' + src + '"></audio>'
+    }
+
+    function setButtonLoading(bool) {
+      var $button = document.getElementById('submit')
+      if (bool) {
+        $button.setAttribute('disabled', bool)
+        $button.innerText = 'Loading...'
+      }
+      else {
+        $button.removeAttribute('disabled')
+        $button.innerText = 'Get Pronounciation'
+      }
+    }
+
+    function submitWord() {
+
+      var $input = document.getElementById('word')
+      var $result = document.getElementById('result')
+
+      if (!$input.value || !$input.value.length) return false
+
+      setButtonLoading(true)
+
+      fetch('<%= apiServer %>' + '?word=' + $input.value)
+        .then(function (res) {
+          return res.json()
+        })
+        .then(function (res) {
+
+          lastFetchedWord = $input.value
+          setButtonLoading(false)
+
+          if (!res.american || !res.british) return false
+
+          $result.innerHTML = [audioFactory('American', res.american), audioFactory('British', res.british)].join('<br/>')
+        })
+        .catch(function (err) {
+          lastFetchedWord = null
+          alert('Problem Occured')
+          setButtonLoading(false)
+        })
+    }
+  </script>
+
+</body>
+
+</html>
