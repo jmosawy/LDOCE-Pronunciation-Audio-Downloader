@@ -518,6 +518,7 @@ template {
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 body {
@@ -529,22 +530,36 @@ body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-.block {
+h1, h2, h3, h4, h5, h6, p {
+  font-family: inherit;
+  font-weight: 400;
+}
+
+.title {
+  font-size: 1.5em;
+}
+
+.container {
   position: absolute;
   top: 50%;
   left: 50%;
   width: 30em;
-  height: 15em;
   margin: -7.5em 0 0 -15em;
+}
+
+.block {
   background-color: rgba(255, 255, 255, 0.3);
   border: .25em solid rgba(255, 255, 255, 0.5);
   border-radius: .5em;
   padding: 1em;
+  max-height: 15em;
+  transition: 250ms linear;
 }
 
 .form {
   display: table;
   width: 100%;
+  margin-bottom: 1em;
 }
 
 .form__input {
@@ -594,10 +609,6 @@ body {
   outline: 0 none;
 }
 
-.result {
-  margin-top: 1em;
-}
-
 .result>a {
   display: block;
   max-width: 100%;
@@ -615,4 +626,8 @@ label {
   font-weight: 900;
   margin-bottom: .5em;
   display: block;
+}
+
+.text-center {
+  text-align: center;
 }

@@ -1,25 +1,39 @@
 const express = require('express')
-const {getPronounciation} = require('./index')
-const port = process.env.PORT || 8080
+const { getPronounciation } = require('./word')
+const port = process.env.PORT || 5000
+
+const envTask = (dev = () => { }, prod = () => { }) => {
+  const env = process.env.NODE_ENV
+  return (env === 'development' ? dev() : prod())
+}
 
 const app = express()
+
+app.set('port', port)
+
+app.set('views', __dirname + '/views')
+app.set('view engine', 'ejs')
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Methods', '*')
-  // res.header('Access-Control-Allow-Headers', '*')
 
   next()
 })
 
-app.use(express.static(__dirname))
+app.use(express.static(__dirname + '/public'))
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html')
+  res.render('pages/index', {
+    apiServer: envTask(
+      () => 'http://localhost:' + app.get('port') + '/pronounce',
+      () => 'https://intense-ridge-91986.herokuapp.com:' + app.get('port') + '/pronounce'
+    )
+  })
 })
 
 app.get('/pronounce', (req, res) => {
-  const {word} = req.query
+  const { word } = req.query
 
   return getPronounciation(word.toLowerCase())
     .then(response => {
@@ -33,6 +47,6 @@ app.get('/pronounce', (req, res) => {
     })
 })
 
-app.listen(port, () => {
-  console.log(`API Server running on ${hostname}:${port}`)
+app.listen(app.get('port'), () => {
+  console.log(`API Server running on port ${app.get('port')}`)
 })

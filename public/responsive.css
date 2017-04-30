@@ -1,0 +1,33 @@
+@media screen and (max-width: 30em) {
+  .container {
+    width: 90%;
+    left: 5%;
+    margin-left: 0;
+  }
+  .title {
+    font-size: 1em;
+  }
+
+  .block {
+    max-height: 100000px;
+    padding: .25em;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .form__input {
+    width: 100%;
+    margin: 0;
+    margin-bottom: .5em;
+  }
+
+  .form__button {
+    width: 100%;
+    background-color: rgba(59, 59, 134, 0.65);
+    color: #fff;
+    border-color: rgba(59, 59, 134, 0.65);
+  }
+}

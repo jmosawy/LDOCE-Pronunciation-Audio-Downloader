@@ -7,20 +7,24 @@
   <title>LDOCE-Pronunciation-Audio-Downloader</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/responsive.css">
+  <link rel="icon" href="/favicon.png">
 </head>
 
 <body>
   <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-
-  <div class="block">
-    <div class="form">
-      <button id="submit" onclick="submitWord()" class="form__button">Get Pronounciation</button>
-      <input id="word" type="text" class="form__input" placeholder="word...">
+  <div class="container">
+    <h3 class="text-center title">Type in any word to pronounce it</h3>
+    <div class="block">
+      <div class="form">
+        <button id="submit" onclick="submitWord()" class="form__button">Get Pronounciation</button>
+        <input id="word" type="text" class="form__input" placeholder="word...">
+      </div>
+      <div class="result" id="result"></div>
     </div>
-    <div class="result" id="result"></div>
   </div>
 
   <script>
@@ -51,7 +55,7 @@
 
       setButtonLoading(true)
 
-      fetch('https://longman-api.herokuapp.com//pronounce?word=' + $input.value)
+      fetch('<%= apiServer %>' + '?word=' + $input.value)
         .then(function (res) {
           return res.json()
         })
